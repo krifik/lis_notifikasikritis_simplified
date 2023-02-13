@@ -1,7 +1,11 @@
-const { app, Tray, BrowserWindow, Menu } = require("electron");
+const { app, Tray, BrowserWindow, Menu, screen, ipcMain } = require("electron");
 const redis = require('redis');
 const winston = require("winston");
 require("dotenv").config();
+
+// try {
+//     require('electron-reloader')(module);
+// } catch (_) { }
 
 let tray = null;
 let mainWindow = null;
@@ -41,10 +45,16 @@ redisClient.subscribe(channelName, async (data) => {
 });
 
 app.on("ready", () => {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
     mainWindow = new BrowserWindow({
-        width: 300,
-        height: 200,
-        show: false,
+        icon: "alert.png",
+        width: Math.round(width / 4),
+        height: Math.round(height / 2),
+        show: true,
+        frame: false,
+        transparent: true,
+        alwaysOnTop: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -69,3 +79,11 @@ app.on("ready", () => {
     //     mainWindow.hide();
     // });
 });
+
+ipcMain.on("showWindow", (event, arg) => {
+    mainWindow.show()
+})
+
+ipcMain.on("hideWindow", (event, arg) => {
+    mainWindow.hide()
+})

@@ -1,6 +1,6 @@
 {
   "name": "notifikasi-kritis",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "notifikasi-kritis",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "author": "",
+  "author": "medqlab",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.5",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
+    "electron-reloader": "^1.2.3",
     "electron-squirrel-startup": "^1.0.0",
     "file-system-db": "^1.1.0",
     "redis": "^4.6.4",

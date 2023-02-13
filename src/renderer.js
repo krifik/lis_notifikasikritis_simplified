@@ -31,22 +31,10 @@ ipcRenderer.on('notif', (event, arg) => {
 
 })
 
-document.getElementById('btn').addEventListener('click', () => {
-    ipcRenderer.send('button', 'button clicked')
-    audio.pause();
-})
-
-var elements = document.getElementsByClassName("list-pasien");
-
-var handlePatient = function () {
-    const regis_id = this.getAttribute('data-regis')
-    const ward_id = this.getAttribute('data-wid')
-    openLink({ regis_id: regis_id, ward_id: ward_id })
+function handlePatient(ID, ward_id) {
+    openLink({ regis_id: ID, ward_id: ward_id })
 };
 
-for (var i = 0; i < elements.length; i++) {
-    elements[i].addEventListener('click', handlePatient, false);
-}
 
 function renderData() {
     const element = document.getElementById('notif-list');
@@ -57,18 +45,26 @@ function renderData() {
         audio.play();
     } else {
         audio.pause();
+        ipcRenderer.send('hideWindow')
     }
 
-    const li = notifs.map(item => {
+    let li = notifs.map(item => {
         return `
-        <li>
-        <button class="list-pasien" data-regis="${item.ID}" data-wid="${item.data.ward_id}">${item.data.patient_name}</button>
+        <li onclick="handlePatient(${item.ID}, ${item.data.ward_id})">
+        <button  class="list-pasien">${item.data.patient_name}</button>
         </li>`
     }).join('')
+
+    if (li == '') {
+        li = '<li><p class="no-patient">Tidak ada pasien kritis</p></li>'
+    }
     element.innerHTML = li
 }
 
 function createNotification(data) {
+    // send ipc to main
+    ipcRenderer.send('showWindow')
+
     const notification = new Notification('Pasien Kritis', {
         body: data.patient_name,
         silent: true,
@@ -80,6 +76,6 @@ function createNotification(data) {
 }
 
 function openLink(data) {
-    const url = `${process.env.LIS_URL}worklist/${data.regis_id}?WID=${data.ward_id}`
+    const url = `${process.env.LIS_URL}critical-view/${data.regis_id}?WID=${data.ward_id}`
     shell.openExternal(url);
 }
