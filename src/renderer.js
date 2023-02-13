@@ -1,7 +1,8 @@
 const { ipcRenderer, shell } = require('electron')
 const FSDB = require("file-system-db");
 require('dotenv').config()
-const audio = new Audio('alarm.wav');
+const path = require("path");
+const audio = new Audio(path.join(__dirname, 'alarm.wav'));
 const db = new FSDB("db.json", false);
 
 renderData()
@@ -24,7 +25,7 @@ ipcRenderer.on('notif', (event, arg) => {
 
     
     if (isNew) {
-        db.set(`${arg.regis_id}`, { "patient_name": arg.patient_name, "ward_id": arg.ward_id, "process_id": arg.process_id })
+        db.set(`${arg.regis_id}`, { "lno": arg.lno, "mrn": arg.mrn, "patient_name": arg.patient_name, "ward_id": arg.ward_id, "process_id": arg.process_id })
         createNotification(arg)
     }
     renderData()
@@ -51,8 +52,16 @@ function renderData() {
     let li = notifs.map(item => {
         return `
         <li onclick="handlePatient(${item.ID}, ${item.data.ward_id})">
-        <button  class="list-pasien">${item.data.patient_name}</button>
-        </li>`
+        <button class="list-pasien w-100" >
+          <table class="w-100">
+            <tr class="tr-btn">
+              <td>${item.data.lno}</td>
+              <td>${item.data.mrn}</td>
+              <td>${item.data.patient_name}</td>
+            </tr>
+          </table>
+        </button>
+        </li>`;
     }).join('')
 
     if (li == '') {

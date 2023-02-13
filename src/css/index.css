@@ -14,6 +14,16 @@ html::-webkit-scrollbar{
   display: none;
 }
 
+.w-100 {
+    width: 100%
+}
+
+.tr-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 #titlebar {
     position: fixed;
     top: 0;

@@ -2,6 +2,8 @@ const { app, Tray, BrowserWindow, Menu, screen, ipcMain } = require("electron");
 const redis = require('redis');
 const winston = require("winston");
 require("dotenv").config();
+const path = require("path");
+const url = require("url");
 
 // try {
 //     require('electron-reloader')(module);
@@ -48,24 +50,31 @@ app.on("ready", () => {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
     mainWindow = new BrowserWindow({
-        icon: "alert.png",
-        width: Math.round(width / 4),
-        height: Math.round(height / 2),
-        show: true,
-        frame: false,
-        transparent: true,
-        alwaysOnTop: true,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-        }
+      icon: path.join(__dirname, "alert.png"),
+      width: Math.round(width / 2),
+      height: Math.round(height / 2),
+      show: true,
+      frame: false,
+      transparent: true,
+      alwaysOnTop: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
     });
     mainWindow.setMenuBarVisibility(false);
 
-    mainWindow.loadFile("src/index.html");
+    // mainWindow.loadFile("src/index.html");
+    mainWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, "src/index.html"),
+        protocol: "file:",
+        slashes: true
+      })
+    );
     // mainWindow.webContents.openDevTools();
 
-    tray = new Tray("alert.png");
+    tray = new Tray(path.join(__dirname, "alert.png"));
     tray.on("click", () => {
         mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     });
