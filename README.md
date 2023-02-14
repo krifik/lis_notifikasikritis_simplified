@@ -1,10 +1,9 @@
 # lis_notifikasikritis
 try critical
-publish 9510_responsetime "{\"patient_name\": \"budi\",\"regis_id\": \"1\",\"ward_id\": \"1\"}"
-
+publish 9510_responsetime "{\"lno\": \"123\",\"mrn\": \"321\",\"patient_name\": \"budi\",\"regis_id\": \"1\",\"ward_id\": \"1\"}"
 
 try response
-publish 9510_responsetime "{\"patient_name\": \"budi\",\"regis_id\": \"1\",\"ward_id\": \"1\"}"
+publish 9510_responsetime "{\"lno\": \"123\",\"mrn\": \"321\",\"patient_name\": \"budi\",\"regis_id\": \"1\",\"ward_id\": \"1\"}"
 
 db init
 {}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="default-src 'self'; script-src 'self'" />
+    <title id="title">Auto Login Setup</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline';"
+    />
+    <!-- <link rel="stylesheet" href="css/index.css" /> -->
+  </head>
+  <body>
+    <div id="profile" class="w-100">
+      <div id="profile-name"></div>
+    </div>
+    <div id="login-form" class="w-100">
+      <form id="login-form" class="w-100">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            placeholder="Enter username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="Password"
+          />
+        </div>
+        <button id="submit" type="submit" class="btn btn-primary">
+          Submit
+        </button>
+      </form>
+    </div>
+    <ul id="notif-list"></ul>
+    <script src="./auth-renderer.js"></script>
+  </body>
+</html>

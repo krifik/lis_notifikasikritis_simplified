@@ -50,35 +50,58 @@ app.on("ready", () => {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
     mainWindow = new BrowserWindow({
-      icon: path.join(__dirname, "alert.png"),
-      width: Math.round(width / 2),
-      height: Math.round(height / 2),
-      show: true,
-      frame: false,
-      transparent: true,
-      alwaysOnTop: true,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
+        icon: path.join(__dirname, "alert.png"),
+        width: Math.round(width / 2),
+        height: Math.round(height / 2),
+        show: true,
+        frame: false,
+        transparent: true,
+        alwaysOnTop: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
     });
     mainWindow.setMenuBarVisibility(false);
 
     // mainWindow.loadFile("src/index.html");
     mainWindow.loadURL(
-      url.format({
-        pathname: path.join(__dirname, "src/index.html"),
-        protocol: "file:",
-        slashes: true
-      })
+        url.format({
+            pathname: path.join(__dirname, "src/index.html"),
+            protocol: "file:",
+            slashes: true
+        })
     );
     // mainWindow.webContents.openDevTools();
+
+    authWindow = new BrowserWindow({
+        icon: path.join(__dirname, "alert.png"),
+        width: 400,
+        height: 400,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
 
     tray = new Tray(path.join(__dirname, "alert.png"));
     tray.on("click", () => {
         mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     });
     const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Auto Login', type: 'normal', click: () => {
+                authWindow.loadURL(
+                    url.format({
+                        pathname: path.join(__dirname, "src/auth.html"),
+                        protocol: "file:",
+                        slashes: true
+                    })
+                );
+                authWindow.show();
+            }
+        },
         { label: 'Exit', type: 'normal', click: () => { app.quit(); } }
     ]);
     tray.setContextMenu(contextMenu);

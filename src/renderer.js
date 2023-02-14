@@ -4,6 +4,7 @@ require('dotenv').config()
 const path = require("path");
 const audio = new Audio(path.join(__dirname, 'alarm.wav'));
 const db = new FSDB("db.json", false);
+const dbAuth = new FSDB("secret.json", true);
 
 renderData()
 
@@ -85,6 +86,7 @@ function createNotification(data) {
 }
 
 function openLink(data) {
-    const url = `${process.env.LIS_URL}critical-view/${data.regis_id}?WID=${data.ward_id}`
+    const token = dbAuth.get("token")
+    const url = `${process.env.LIS_URL}/auto?id=${data.regis_id}&wid=${data.ward_id}&token=${token}`
     shell.openExternal(url);
 }
