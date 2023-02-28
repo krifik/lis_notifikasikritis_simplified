@@ -51,8 +51,8 @@ app.on("ready", () => {
     
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
-        width: Math.round(width / 2),
-        height: Math.round(height / 2),
+        width: Math.round(width / 1.5),
+        height: Math.round(height / 1.5),
         show: true,
         frame: false,
         transparent: true,
@@ -62,7 +62,9 @@ app.on("ready", () => {
             contextIsolation: false,
         },
     });
-    mainWindow.webContents.openDevTools();
+
+    // open devtools
+    // mainWindow.webContents.openDevTools();
     mainWindow.setMenuBarVisibility(false);
 
     // mainWindow.loadFile("src/index.html");
