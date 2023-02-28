@@ -8,7 +8,8 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "build": "electron-builder build"
+    "build": "electron-builder build",
+    "start:nodemon": "nodemon --watch main.js --exec npm start"
   },
   "build": {
     "win": {
@@ -20,9 +21,15 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "icon": "build/256x256.png",
+      "target": [
+        "deb"
+      ]
     }
   },
-  "author": "medqlab",
+  "author": "medqlab <medqlab@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.5",

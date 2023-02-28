@@ -1,7 +1,6 @@
 const FSDB = require("file-system-db");
 require("dotenv").config();
 const db = new FSDB("secret.json", true);
-
 getProfile();
 
 document.getElementById("submit").addEventListener("click", (event) => {

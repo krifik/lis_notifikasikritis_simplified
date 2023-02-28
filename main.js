@@ -48,7 +48,7 @@ redisClient.subscribe(channelName, async (data) => {
 
 app.on("ready", () => {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
+    
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
         width: Math.round(width / 2),
@@ -62,6 +62,7 @@ app.on("ready", () => {
             contextIsolation: false,
         },
     });
+    mainWindow.webContents.openDevTools();
     mainWindow.setMenuBarVisibility(false);
 
     // mainWindow.loadFile("src/index.html");
