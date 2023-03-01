@@ -76,7 +76,11 @@ app.on("ready", () => {
      );
    
     mainWindow.setMenuBarVisibility(false);
-
+    // 
+    mainWindow.on("close", (event) => {
+        event.preventDefault();
+        alert(":)");
+    })
     // mainWindow.loadFile("src/index.html");
     mainWindow.loadURL(
         url.format({
