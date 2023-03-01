@@ -4,6 +4,7 @@ const winston = require("winston");
 require("dotenv").config();
 const path = require("path");
 const url = require("url");
+const remote = require('@electron/remote/main').initialize()
 
 // try {
 //     require('electron-reloader')(module);
@@ -54,17 +55,19 @@ app.on("ready", () => {
         width: Math.round(width / 1.5),
         height: Math.round(height / 1.5),
         show: true,
-        // frame: false,
+        frame: false,
         transparent: true,
         alwaysOnTop: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
+            // enableRemoteModule: true
         },
     });
 
     // open devtools
     mainWindow.webContents.openDevTools();
+    require("@electron/remote/main").enable(mainWindow.webContents)
     mainWindow.webContents
     .on("before-input-event",
       (event,input)=>
@@ -79,7 +82,7 @@ app.on("ready", () => {
     // 
     mainWindow.on("close", (event) => {
         event.preventDefault();
-        alert(":)");
+        // alert(":)");
     })
     // mainWindow.loadFile("src/index.html");
     mainWindow.loadURL(

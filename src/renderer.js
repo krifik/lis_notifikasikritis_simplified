@@ -1,4 +1,4 @@
-const { ipcRenderer, shell } = require('electron')
+const { ipcRenderer, shell, remote } = require('electron')
 const FSDB = require("file-system-db");
 require('dotenv').config()
 const path = require("path");
@@ -42,12 +42,17 @@ ipcRenderer.on('notif', (event, arg) => {
 
 })
 
+
+
 function handlePatient(ID, ward_id) {
     openLink({ regis_id: ID, ward_id: ward_id })
 };
 
 var defaultName;
-
+function minimaze(e) {
+    console.log(e)
+    remote.BrowserWindow.getFocusedWindow().minimize();
+}
 function handleInput(inputIndex) {
     // win.webContents.openDevTools()
     let inputValue = document.getElementById("inputId-"+inputIndex)

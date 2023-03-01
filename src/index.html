@@ -21,6 +21,11 @@
             document.write(document.title);
           </script>
         </span>
+        <div class="end">
+          <button id="min-btn">
+            <img style="cursor: pointer; color: white; width: 30px;" src="minus.png">
+          </button>
+        </div>
       </div>
     </header>
       <ul>
@@ -41,5 +46,30 @@
       </ul>
     <ul id="notif-list"></ul>
     <script src="./renderer.js"></script>
+     <script>
+        (function () {
+            // Retrieve remote BrowserWindow
+            // New way.
+            const { BrowserWindow } = require('@electron/remote')
+
+            function init() {
+                // Minimize task
+                document.getElementById("min-btn").addEventListener("click", (e) => {
+                   console.log(e)
+                    var window = BrowserWindow.getFocusedWindow();
+                    console.log(window)
+                    window.minimize();
+                });
+
+           
+            };
+
+            document.onreadystatechange =  () => {
+                if (document.readyState == "complete") {
+                    init();
+                }
+            };
+        })();
+        </script>
   </body>
 </html>
