@@ -66,7 +66,7 @@ app.on("ready", () => {
     });
 
     // open devtools
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
     require("@electron/remote/main").enable(mainWindow.webContents)
     mainWindow.webContents
     .on("before-input-event",
