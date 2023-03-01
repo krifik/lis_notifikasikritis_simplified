@@ -125,22 +125,18 @@ app.on("ready", () => {
     // });
 });
 
-app.on('close', (e) => {
-    mainWindow = null;
-    alert("CLOSED");
-})
-
-app.on('window-all-closed', (e) => {
-    // console.log(e)
-    // e.preventDefault()
-    // mainWindow.hide()
-    mainWindow = null;
+app.on('close', (event) => {
+    event.preventDefault();
 
 })
 
-app.on('closed', (e) => {
-    // mainWindow.quit()
-    mainWindow = null;
+app.on('window-all-closed', (event) => {
+    event.preventDefault();
+})
+
+app.on('closed', (event) => {
+    event.preventDefault();
+
 })
 
 ipcMain.on("showWindow", (event, arg) => {
