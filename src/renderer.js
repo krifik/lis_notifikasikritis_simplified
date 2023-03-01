@@ -19,7 +19,7 @@ ipcRenderer.on('notif', (event, arg) => {
 
     if (notifs.length > 0) {
         notifs.forEach(item => {
-            if (item.ID == arg.uid_exam) {
+            if (item.ID == arg.regis_id) {
                 db.delete(item.ID)
                 isNew = true;
             }
@@ -28,16 +28,13 @@ ipcRenderer.on('notif', (event, arg) => {
 
     
     if (isNew) {
-        db.set(`${arg.uid_exam}`, { 
+        db.set(`${arg.regis_id}`, { 
             "lno": arg.lno,
             "mrn": arg.mrn,
             "patient_name": arg.patient_name,
             "ward_id": arg.ward_id,
             "process_id": arg.process_id,
             "test": arg.test,
-            "value": arg.value,
-            "flag": arg.flag,
-            "regis_id": arg.regis_id
         })
         createNotification(arg)
     }
@@ -125,15 +122,21 @@ function renderData() {
     let li = notifs.map((item, index) => {
         return `
         <li>
-        <button class="list-pasien w-100">
           <table class="w-100">
-            <tr class="tr-btn">
+            <tr class="">
               <td>${item.data.lno}</td>
               <td>${item.data.mrn}</td>
               <td>${item.data.patient_name}</td>
-              <td>${item.data.test}</td>
-              <td>${item.data.value}</td>
-              <td>${item.data.flag}</td>
+              <td> ${item.data.test.map(el => {
+                return `<li style="text-align: center">${el.test.test_name}</li>`
+                })}
+                </td>
+              <td>${item.data.test.map(el => {
+                return `<li style="text-align: center">${el.value}</li>`
+                })}</td>
+              <td>${item.data.test.map(el => {
+                return `<li style="text-align: center">${el.flag}</li>`
+                })}</td>
               <td>
               <textarea style="width: 70px" id="inputId-${index}" class="inputValidation" onbeforeinput="handleInput(${index})" value="" name="confirmedBy"></textarea>
               </td>
@@ -143,8 +146,9 @@ function renderData() {
               </td>
             </tr>
           </table>
-        </button>
-        </li>`;
+        </li>
+       
+        `
     }).join('')
 
     if (li == '') {

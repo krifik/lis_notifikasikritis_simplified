@@ -54,7 +54,7 @@ app.on("ready", () => {
         width: Math.round(width / 1.5),
         height: Math.round(height / 1.5),
         show: true,
-        frame: false,
+        // frame: false,
         transparent: true,
         alwaysOnTop: true,
         webPreferences: {
@@ -64,7 +64,17 @@ app.on("ready", () => {
     });
 
     // open devtools
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
+    mainWindow.webContents
+    .on("before-input-event",
+      (event,input)=>
+         { 
+           if(input.code=='F4'&&input.alt) {
+               event.preventDefault();
+           }
+         }
+     );
+   
     mainWindow.setMenuBarVisibility(false);
 
     // mainWindow.loadFile("src/index.html");
@@ -114,6 +124,24 @@ app.on("ready", () => {
     //     mainWindow.hide();
     // });
 });
+
+app.on('close', (e) => {
+    mainWindow = null;
+    alert("CLOSED");
+})
+
+app.on('window-all-closed', (e) => {
+    // console.log(e)
+    // e.preventDefault()
+    // mainWindow.hide()
+    mainWindow = null;
+
+})
+
+app.on('closed', (e) => {
+    // mainWindow.quit()
+    mainWindow = null;
+})
 
 ipcMain.on("showWindow", (event, arg) => {
     mainWindow.show()
