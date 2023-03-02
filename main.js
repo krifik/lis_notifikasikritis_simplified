@@ -92,7 +92,10 @@ app.on("ready", () => {
             slashes: true
         })
     );
-    // mainWindow.webContents.openDevTools();
+    if(process.env.DEBUGGING){ 
+         mainWindow.webContents.openDevTools();
+    }
+    
 
     authWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
