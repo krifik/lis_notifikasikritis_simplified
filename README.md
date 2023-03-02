@@ -24,6 +24,7 @@ build output will be available in ```dist``` folder
 ## How to try send directly from redis (for testing)
 Run this on redis-cli
 
+old data, not working anymore. but, i decided to leave here. just in case it rollback to old version
 try critical
 publish 9510_responsetime "{\"lno\": \"123\",\"mrn\": \"321\",\"patient_name\": \"budi\",\"regis_id\": \"1\",\"ward_id\": \"1\"}"
 
