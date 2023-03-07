@@ -45,11 +45,31 @@ redisClient.on('error', function (err) {
 redisClient.subscribe(channelName, async (data) => {
     logger.info("Redis data received: " + data);
     mainWindow.webContents.send("notif", data);
+    // reset REFRESH ketika ada data masuk
+    refreshAt(00,00,00)
 });
+function refreshAt(hours, minutes, seconds) {
+    var now = new Date();
+    var then = new Date();
+
+    if(now.getHours() > hours ||
+       (now.getHours() == hours && now.getMinutes() > minutes) ||
+        now.getHours() == hours && now.getMinutes() == minutes && now.getSeconds() >= seconds) {
+        then.setDate(now.getDate() + 1);
+    }
+    then.setHours(hours);
+    then.setMinutes(minutes);
+    then.setSeconds(seconds);
+
+    var timeout = (then.getTime() - now.getTime());
+    setTimeout(function() { mainWindow.webContents.send('refresh'); }, timeout);
+}
 
 app.on("ready", () => {
+
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    
+    refreshAt(00,00,00) 
+    // refresh pada jam 00:00:00
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
         width: Math.round(width / 1.5),
@@ -64,24 +84,25 @@ app.on("ready", () => {
             // enableRemoteModule: true
         },
     });
-
+    
+    require("@electron/remote/main").enable(mainWindow.webContents)
     // open devtools
     // mainWindow.webContents.openDevTools();
-    require("@electron/remote/main").enable(mainWindow.webContents)
     mainWindow.webContents
     .on("before-input-event",
-      (event,input)=>
-         { 
-           if(input.code=='F4'&&input.alt) {
-               event.preventDefault();
-           }
-         }
-     );
+    (event,input)=>
+    { 
+        if(input.code=='F4'&&input.alt) {
+            event.preventDefault();
+        }
+    }
+    );
+    mainWindow.webContents.send('refresh');
    
     mainWindow.setMenuBarVisibility(false);
     // 
     mainWindow.on("close", (event) => {
-        event.preventDefault();
+        // event.preventDefault();
         // alert(":)");
     })
     // mainWindow.loadFile("src/index.html");
@@ -136,16 +157,16 @@ app.on("ready", () => {
 });
 
 app.on('close', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
 })
 
 app.on('window-all-closed', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 })
 
 app.on('closed', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
 })
 

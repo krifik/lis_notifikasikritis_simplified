@@ -1,6 +1,7 @@
 const { ipcRenderer, shell, remote } = require('electron')
 const FSDB = require("file-system-db");
 require('dotenv').config()
+const winston = require("winston");
 const path = require("path");
 const audio = new Audio(path.join(__dirname, 'alarm.wav'));
 const db = new FSDB("db.json", false);
@@ -9,9 +10,95 @@ const dbAuth = new FSDB("secret.json", true);
 
 
 renderData()
+const logger = winston.createLogger({
+    level: "info",
+    maxsize: 5242880, // 5MB
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
 
-ipcRenderer.on('notif', (event, arg) => {
+    transports: [
+        new winston.transports.File({ filename: "error.log", level: "error" }),
+        new winston.transports.File({ filename: "combined.log" }),
+    ],
+});
+
+ipcRenderer.on('refresh', async() => {
+    try {
+        await fetch(`${process.env.API_URL}/worklist/critical/examination`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "+dbAuth.get("token")
+            },
+            // body: bodyJson,
+        })
+            .then((response) => response.json())
+            .then(function (d) {
+                console.log(d)
+                logger.info("Reload pada : "+ new Date())
+                if(d.status) {
+                    db.deleteAll()
+                    d.data.forEach((el) => {
+                        db.set(`${el.regis_id}`, {
+                            "lno": el.lno,
+                            "sending_date": el.sending_date,
+                            "mrn": el.mrn,
+                            "patient_name": el.patient_name,
+                            "ward_id": el.ward_id,
+                            // "process_id": el.process_id,
+                            "test": el.test,
+                        })
+                    })
+                    renderData()
+
+                }
+            });
+    } catch (error) {
+        alert("Terjadi kesalahan pada server.");
+        logger.error(error)
+    }
+})
+ipcRenderer.on('notif', async(event, arg) => {
     arg = JSON.parse(arg)
+
+    // try {
+    //     await fetch(`${process.env.API_URL}/worklist/critical/examination`, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": "Bearer "+dbAuth.get("token")
+    //         },
+    //         // body: bodyJson,
+    //     })
+    //         .then((response) => response.json())
+    //         .then(function (d) {
+    //             console.log(d)
+    //             if(d.status) {
+    //                 db.deleteAll()
+    //                 d.data.forEach((el) => {
+    //                     db.set(`${el.regis_id}`, {
+    //                         "lno": el.lno,
+    //                         "sending_date": el.sending_date,
+    //                         "mrn": el.mrn,
+    //                         "patient_name": el.patient_name,
+    //                         "ward_id": el.ward_id,
+    //                         // "process_id": el.process_id,
+    //                         "test": el.test,
+    //                     })
+    //                 })
+    //             renderData()
+    //             // db.delete(id)
+    //             // let patientElement = document.getElementById('patient-'+id).remove()
+    //             // console.log(patientElement)
+    //             // return alert("Berhasil ambil data!")
+    //             }
+    //         });
+    // } catch (error) {
+    //     alert("Terjadi kesalahan pada server.");
+    //     logger.error(error)
+    // }
 
     const notifs = db.all();
 
@@ -28,8 +115,9 @@ ipcRenderer.on('notif', (event, arg) => {
 
     
     if (isNew) {
-        db.set(`${arg.regis_id}`, { 
+        db.set(`${arg.regis_id}`, {
             "lno": arg.lno,
+            "sending_date": arg.sending_date,
             "mrn": arg.mrn,
             "patient_name": arg.patient_name,
             "ward_id": arg.ward_id,
@@ -73,6 +161,8 @@ async function handleConfirm(id, ward_id, lno, mrn, patient_name, test, value, f
     // console.log(data)
 
     let responder = document.getElementById("inputId-"+index).value
+
+
     if (!responder) return alert("Isi textboxt terlebih dahulu!")
     var bodyJson = JSON.stringify({
         "regis_id": regis_id,
@@ -98,22 +188,23 @@ async function handleConfirm(id, ward_id, lno, mrn, patient_name, test, value, f
         })
             .then((response) => response.json())
             .then(function (d) {
-                console.log(d.status)
-                console.log(d)
+
                 if(d.status) {
+                    // let patientElement = document.getElementById('patient-'+id).remove()
                 db.delete(id)
-                location.reload()
-                return alert("Berhasil!")
+                renderData()
+                return alert("Berhasil dikonfirmasi!")
                 }
             });
     } catch (error) {
-        alert("Request failed", error);
+        alert("Terjadi kesalahan pada server.");
+        logger.error(error)
     }
 }
 function renderData() {
     const element = document.getElementById('notif-list');
     const notifs = db.all()
-    console.log("DATA", notifs)
+    // console.log("DATA", notifs)
     
     if (notifs.length > 0) {
         audio.loop = true;
@@ -126,10 +217,11 @@ function renderData() {
     // onclick="handlePatient(${item.ID}, ${item.data.ward_id})">
     let li = notifs.map((item, index) => {
         return `
-        <li>
+        <li id="patient-${item.ID}">
           <table class="w-100">
             <tr class="">
-              <td>${item.data.lno}</td>
+            <td>${item.data.sending_date}</td>
+            <td>${item.data.lno}</td>
               <td>${item.data.mrn}</td>
               <td>${item.data.patient_name}</td>
               <td> ${item.data.test.map(el => {
