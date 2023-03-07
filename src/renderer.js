@@ -61,7 +61,7 @@ ipcRenderer.on('refresh', async() => {
                 logger.error(err)
             });
     } catch (error) {
-        alert("Terjadi kesalahan pada server.");
+        // alert("Terjadi kesalahan pada server.");
         logger.error(error)
     }
 })
@@ -101,7 +101,7 @@ ipcRenderer.on('ready', async(event) => {
                 }
             });
     } catch (error) {
-        alert("Terjadi kesalahan pada server.");
+        // alert("Terjadi kesalahan pada server.");
         logger.error(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Error "+error)
     }
 
@@ -244,7 +244,7 @@ async function handleConfirm(id, ward_id, lno, mrn, patient_name, test, value, f
                 }
             });
     } catch (error) {
-        alert("Terjadi kesalahan pada server.");
+        // alert("Terjadi kesalahan pada server.");
         logger.error(error)
     }
 }
