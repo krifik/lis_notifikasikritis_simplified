@@ -39,7 +39,7 @@ ipcRenderer.on('refresh', async() => {
                 console.log(d)
                 logger.info("Reload pada : "+ new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID'))
                 if(d.error) {
-                    logger.error(d.error)
+                    logger.error("Err: "+d.error)
                 }
                 if(d.status) {
                     db.deleteAll()
@@ -60,9 +60,9 @@ ipcRenderer.on('refresh', async() => {
             }).catch((err) => {
                 logger.error(err)
             });
-    } catch (error) {
+    } catch (err) {
         // alert("Terjadi kesalahan pada server.");
-        logger.error(error)
+        logger.error(err)
     }
 })
 
@@ -80,7 +80,7 @@ ipcRenderer.on('ready', async(event) => {
             .then((response) => response.json())
             .then(function (d) {
                 if(d.error) {
-                    logger.error(d.error)
+                    logger.error("Err: "+d.error)
                 }
                 if(d.status) {
                     db.deleteAll()
@@ -95,14 +95,13 @@ ipcRenderer.on('ready', async(event) => {
                             "test": el.test,
                         })
                     })
-                renderData()
-                logger.info(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Successfully get data critical")
-
+                    renderData()
+                    logger.info(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Successfully get data critical")
                 }
             });
-    } catch (error) {
+    } catch (err) {
         // alert("Terjadi kesalahan pada server.");
-        logger.error(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Error "+error)
+        logger.error(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Error "+err)
     }
 
 })
@@ -243,9 +242,9 @@ async function handleConfirm(id, ward_id, lno, mrn, patient_name, test, value, f
                 return alert("Berhasil dikonfirmasi!")
                 }
             });
-    } catch (error) {
+    } catch (err) {
         // alert("Terjadi kesalahan pada server.");
-        logger.error(error)
+        logger.error(err)
     }
 }
 function renderData() {
@@ -258,7 +257,7 @@ function renderData() {
         audio.play();
     } else {
         audio.pause();
-        ipcRenderer.send('hideWindow')
+        // ipcRenderer.send('hideWindow')
     }
     let defaultName = ''
     // onclick="handlePatient(${item.ID}, ${item.data.ward_id})">
