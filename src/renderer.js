@@ -37,7 +37,7 @@ ipcRenderer.on('refresh', async() => {
             .then((response) => response.json())
             .then(function (d) {
                 console.log(d)
-                logger.info("Reload pada : "+ new Date())
+                logger.info("Reload pada : "+ new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID'))
                 if(d.status) {
                     db.deleteAll()
                     d.data.forEach((el) => {
@@ -54,11 +54,51 @@ ipcRenderer.on('refresh', async() => {
                     renderData()
 
                 }
+            }).catch((err) => {
+                logger.error(err)
             });
     } catch (error) {
-        alert("Terjadi kesalahan pada server.");
+        // alert("Terjadi kesalahan pada server.");
         logger.error(error)
     }
+})
+
+ipcRenderer.on('ready', async(event) => {
+        try {
+        await fetch(`${process.env.API_URL}/worklist/critical/examination`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "+dbAuth.get("token")
+            },
+            // body: bodyJson,
+        })
+            .then((response) => response.json())
+            .then(function (d) {
+                console.log(d)
+                if(d.status) {
+                    db.deleteAll()
+                    d.data.forEach((el) => {
+                        db.set(`${el.regis_id}`, {
+                            "lno": el.lno,
+                            "sending_date": el.sending_date,
+                            "mrn": el.mrn,
+                            "patient_name": el.patient_name,
+                            "ward_id": el.ward_id,
+                            // "process_id": el.process_id,
+                            "test": el.test,
+                        })
+                    })
+                renderData()
+                logger.info(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Successfully get data critical")
+
+                }
+            });
+    } catch (error) {
+        // alert("Terjadi kesalahan pada server.");
+        logger.error(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Error "+error)
+    }
+
 })
 ipcRenderer.on('notif', async(event, arg) => {
     arg = JSON.parse(arg)
@@ -190,7 +230,6 @@ async function handleConfirm(id, ward_id, lno, mrn, patient_name, test, value, f
             .then(function (d) {
 
                 if(d.status) {
-                    // let patientElement = document.getElementById('patient-'+id).remove()
                 db.delete(id)
                 renderData()
                 return alert("Berhasil dikonfirmasi!")

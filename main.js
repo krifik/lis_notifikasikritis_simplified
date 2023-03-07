@@ -64,16 +64,20 @@ function refreshAt(hours, minutes, seconds) {
     var timeout = (then.getTime() - now.getTime());
     setTimeout(function() { mainWindow.webContents.send('refresh'); }, timeout);
 }
-
+function sendReady() {
+    setTimeout(() => {
+        mainWindow.webContents.send('ready')
+    }, 1000)
+}
 app.on("ready", () => {
-
+    
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    refreshAt(00,00,00) 
+    refreshAt(01,07,00) 
     // refresh pada jam 00:00:00
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
-        width: Math.round(width / 1.5),
-        height: Math.round(height / 1.5),
+        width: Math.round(width / 0.5),
+        height: Math.round(height / 0.5),
         show: false,
         frame: false,
         transparent: true,
@@ -98,7 +102,8 @@ app.on("ready", () => {
         }
     }
     );
-    mainWindow.webContents.send('refresh');
+    // mainWindow.webContents.send('refresh');
+    sendReady()
    
     mainWindow.setMenuBarVisibility(false);
     // 
