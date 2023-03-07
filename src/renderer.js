@@ -38,6 +38,9 @@ ipcRenderer.on('refresh', async() => {
             .then(function (d) {
                 console.log(d)
                 logger.info("Reload pada : "+ new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID'))
+                if(d.error) {
+                    logger.error(d.error)
+                }
                 if(d.status) {
                     db.deleteAll()
                     d.data.forEach((el) => {
@@ -58,12 +61,13 @@ ipcRenderer.on('refresh', async() => {
                 logger.error(err)
             });
     } catch (error) {
-        // alert("Terjadi kesalahan pada server.");
+        alert("Terjadi kesalahan pada server.");
         logger.error(error)
     }
 })
 
 ipcRenderer.on('ready', async(event) => {
+    
         try {
         await fetch(`${process.env.API_URL}/worklist/critical/examination`, {
             method: "GET",
@@ -75,7 +79,9 @@ ipcRenderer.on('ready', async(event) => {
         })
             .then((response) => response.json())
             .then(function (d) {
-                console.log(d)
+                if(d.error) {
+                    logger.error(d.error)
+                }
                 if(d.status) {
                     db.deleteAll()
                     d.data.forEach((el) => {
@@ -95,7 +101,7 @@ ipcRenderer.on('ready', async(event) => {
                 }
             });
     } catch (error) {
-        // alert("Terjadi kesalahan pada server.");
+        alert("Terjadi kesalahan pada server.");
         logger.error(new Date().toLocaleDateString('id-ID')+" "+new Date().toLocaleTimeString('id-ID') +" : Error "+error)
     }
 
@@ -228,7 +234,9 @@ async function handleConfirm(id, ward_id, lno, mrn, patient_name, test, value, f
         })
             .then((response) => response.json())
             .then(function (d) {
-
+                if(d.error) {
+                    logger.error(d.error)
+                }
                 if(d.status) {
                 db.delete(id)
                 renderData()

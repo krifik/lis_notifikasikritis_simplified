@@ -13,6 +13,7 @@ const remote = require('@electron/remote/main').initialize()
 let tray = null;
 let mainWindow = null;
 
+
 // Create a logger
 const logger = winston.createLogger({
     level: "info",
@@ -103,7 +104,6 @@ app.on("ready", () => {
     }
     );
     // mainWindow.webContents.send('refresh');
-    sendReady()
    
     mainWindow.setMenuBarVisibility(false);
     // 
@@ -152,6 +152,7 @@ app.on("ready", () => {
         { label: 'Exit', type: 'normal', click: () => { app.quit(); } }
     ]);
     tray.setContextMenu(contextMenu);
+    sendReady()
 
     // mainWindow.on('close', function (evt) {
     //     evt.preventDefault();
