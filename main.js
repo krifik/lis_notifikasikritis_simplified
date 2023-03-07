@@ -101,10 +101,7 @@ app.on("ready", () => {
    
     mainWindow.setMenuBarVisibility(false);
     // 
-    mainWindow.on("close", (event) => {
-        // event.preventDefault();
-        // alert(":)");
-    })
+
     // mainWindow.loadFile("src/index.html");
     mainWindow.loadURL(
         url.format({
@@ -157,16 +154,16 @@ app.on("ready", () => {
 });
 
 app.on('close', (event) => {
-    // event.preventDefault();
+    event.preventDefault();
 
 })
 
 app.on('window-all-closed', (event) => {
-    // event.preventDefault();
+    event.preventDefault();
 })
 
 app.on('closed', (event) => {
-    // event.preventDefault();
+    event.preventDefault();
 
 })
 
