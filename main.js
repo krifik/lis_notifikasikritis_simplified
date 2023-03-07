@@ -99,8 +99,7 @@ app.on("ready", () => {
     );
     mainWindow.webContents.send('refresh');
    
-    mainWindow.setMenuBarVisibility(false);
-    // 
+    mainWindow.setMenuBarVisibility(true);
 
     // mainWindow.loadFile("src/index.html");
     mainWindow.loadURL(
