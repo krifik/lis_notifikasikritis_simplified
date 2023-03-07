@@ -84,6 +84,7 @@ app.on("ready", () => {
             // enableRemoteModule: true
         },
     });
+    mainWindow.show()
     
     require("@electron/remote/main").enable(mainWindow.webContents)
     // open devtools
@@ -99,7 +100,8 @@ app.on("ready", () => {
     );
     mainWindow.webContents.send('refresh');
    
-    mainWindow.setMenuBarVisibility(true);
+    mainWindow.setMenuBarVisibility(false);
+    // 
 
     // mainWindow.loadFile("src/index.html");
     mainWindow.loadURL(
