@@ -74,7 +74,7 @@ app.on("ready", () => {
         icon: path.join(__dirname, "alert.png"),
         width: Math.round(width / 1.5),
         height: Math.round(height / 1.5),
-        show: true,
+        show: false,
         frame: false,
         transparent: true,
         alwaysOnTop: true,
