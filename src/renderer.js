@@ -26,12 +26,15 @@ const logger = winston.createLogger({
 
 ipcRenderer.on('refresh', async() => {
     try {
-        await fetch(`${process.env.API_URL}/worklist/critical/examination`, {
+        await fetch(`${process.env.API_URL}/worklist/critical/examination?ward_id=${process.env.CHANNEL_NAME.split('_')[0]}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer "+dbAuth.get("token")
             },
+            params :{
+                "ward_id": process.env.CHANNEL_NAME.split('_')[0]
+            }
             // body: bodyJson,
         })
             .then((response) => response.json())
@@ -69,7 +72,7 @@ ipcRenderer.on('refresh', async() => {
 ipcRenderer.on('ready', async(event) => {
     
         try {
-        await fetch(`${process.env.API_URL}/worklist/critical/examination`, {
+        await fetch(`${process.env.API_URL}/worklist/critical/examination?ward_id=${process.env.CHANNEL_NAME.split('_')[0]}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

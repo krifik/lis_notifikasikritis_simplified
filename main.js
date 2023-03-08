@@ -77,8 +77,8 @@ app.on("ready", () => {
     // refresh pada jam 00:00:00
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
-        width: Math.round(width / 0.5),
-        height: Math.round(height / 0.5),
+        width: Math.round(width / process.env.WIDTH ? process.env.WIDTH : 1.2),
+        height: Math.round(height / process.env.HEIGHT ? process.env.HEIGHT : 1.2),
         show: false,
         frame: false,
         transparent: true,
