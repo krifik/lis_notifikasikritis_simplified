@@ -77,8 +77,8 @@ app.on("ready", () => {
     // refresh pada jam 00:00:00
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
-        width: Math.round(width / process.env.WIDTH ? process.env.WIDTH : 1.2),
-        height: Math.round(height / process.env.HEIGHT ? process.env.HEIGHT : 1.2),
+        width: Math.round(width / 1.2),
+        height: Math.round(height / 1.2),
         show: false,
         frame: false,
         transparent: true,
@@ -136,8 +136,10 @@ app.on("ready", () => {
     tray.on("click", () => {
         mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     });
-    const contextMenu = Menu.buildFromTemplate([
-        {
+    if(process.env.WITHAUTH) {
+
+        const contextMenu = Menu.buildFromTemplate([
+            {
             label: 'Auto Login', type: 'normal', click: () => {
                 authWindow.loadURL(
                     url.format({
@@ -145,13 +147,14 @@ app.on("ready", () => {
                         protocol: "file:",
                         slashes: true
                     })
-                );
-                authWindow.show();
-            }
-        },
-        { label: 'Exit', type: 'normal', click: () => { app.quit(); } }
-    ]);
-    tray.setContextMenu(contextMenu);
+                    );
+                    authWindow.show();
+                }
+            },
+            { label: 'Exit', type: 'normal', click: () => { app.quit(); } }
+        ]);
+        tray.setContextMenu(contextMenu);
+    }
     sendReady()
 
     // mainWindow.on('close', function (evt) {
