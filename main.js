@@ -73,7 +73,7 @@ function sendReady() {
 app.on("ready", () => {
     
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    refreshAt(01,07,00) 
+    refreshAt(00,00,00) 
     // refresh pada jam 00:00:00
     mainWindow = new BrowserWindow({
         icon: path.join(__dirname, "alert.png"),
@@ -132,12 +132,12 @@ app.on("ready", () => {
         },
     });
 
-    tray = new Tray(path.join(__dirname, "alert.png"));
-    tray.on("click", () => {
-        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-    });
+    // tray = new Tray(path.join(__dirname, "alert.png"));
+    // tray.on("click", () => {
+    //     // mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    //     sendReady()
+    // });
     if(process.env.WITHAUTH) {
-
         const contextMenu = Menu.buildFromTemplate([
             {
             label: 'Auto Login', type: 'normal', click: () => {
